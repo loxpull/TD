@@ -16,7 +16,7 @@
       }
     },
     "com.unity.multiplayer.center": {
-      "version": "2.0.1",
+      "version": "1.0.1",
       "depth": 0,
       "source": "builtin",
       "dependencies": {
@@ -24,7 +24,7 @@
       }
     },
     "com.unity.ugui": {
-      "version": "2.6.0",
+      "version": "2.5.0",
       "depth": 0,
       "source": "builtin",
       "dependencies": {
