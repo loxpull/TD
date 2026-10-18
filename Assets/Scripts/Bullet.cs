@@ -1,30 +1,59 @@
+
 using UnityEngine;
 
 public class Bullet : MonoBehaviour
 {
     public float speed = 10f;
-    public int damage = 10;
-    public GameObject explosionEffect;
+    public int damage = 1;
+    public float lifetime = 3f;
+    public GameObject explosionPrefab;
 
-    void Update()
+    [HideInInspector]
+    public string ownerTag = "";
+
+    private Rigidbody2D rb;
+
+    void Start()
     {
-        transform.Translate(Vector3.right * speed * Time.deltaTime);
+        rb = GetComponent<Rigidbody2D>();
+
+        if (rb != null)
+        {
+            rb.linearVelocity = transform.right * speed;
+        }
+
+        Destroy(gameObject, lifetime);
     }
 
     void OnTriggerEnter2D(Collider2D other)
     {
-        if (other.CompareTag("Player") || other.CompareTag("Enemy"))
+        // Игнорируем объекты, если тег владельца задан
+        if (!string.IsNullOrEmpty(ownerTag) &&
+            other.transform.root.CompareTag(ownerTag))
         {
-            if (other.CompareTag("Enemy"))
-            {
-                FindObjectOfType<GameScore>().AddScore(100);
-                Destroy(other.gameObject);
-                Destroy(gameObject);
-            }
-            other.GetComponent<HealthSystem>().TakeDamage(damage);
-            Instantiate(explosionEffect, transform.position, Quaternion.identity);
-            Destroy(gameObject);
+            return;
         }
+
+        if (other.GetComponentInParent<Bullet>() != null)
+            return;
+
+        HealthSystem health =
+            other.GetComponentInParent<HealthSystem>();
+
+        if (health != null)
+        {
+            health.TakeDamage(damage);
+        }
+
+        if (explosionPrefab != null)
+        {
+            Instantiate(
+                explosionPrefab,
+                transform.position,
+                Quaternion.identity
+            );
+        }
+
+        Destroy(gameObject);
     }
-    
 }

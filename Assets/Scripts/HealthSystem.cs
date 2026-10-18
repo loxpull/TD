@@ -2,10 +2,11 @@ using UnityEngine;
 
 public class HealthSystem : MonoBehaviour
 {
-    public int maxHealth = 100;
+    public int maxHealth = 3;
+
     private int currentHealth;
 
-    void Start()
+    private void Awake()
     {
         currentHealth = maxHealth;
     }
@@ -13,9 +14,16 @@ public class HealthSystem : MonoBehaviour
     public void TakeDamage(int damage)
     {
         currentHealth -= damage;
+        Debug.Log(gameObject.name + " получил урон. Здоровье: " + currentHealth);
+
         if (currentHealth <= 0)
         {
-            Destroy(gameObject);
+            Die();
         }
+    }
+
+    private void Die()
+    {
+        Destroy(gameObject);
     }
 }
